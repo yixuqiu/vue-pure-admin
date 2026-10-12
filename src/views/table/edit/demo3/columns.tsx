@@ -1,8 +1,8 @@
 import { ref, computed } from "vue";
 import { tableDataEdit } from "../data";
 
-import EditPen from "@iconify-icons/ep/edit-pen";
-import Check from "@iconify-icons/ep/check";
+import EditPen from "~icons/ep/edit-pen";
+import Check from "~icons/ep/check";
 
 export function useColumns() {
   const editMap = ref({});
@@ -35,7 +35,7 @@ export function useColumns() {
       prop: "name",
       cellRenderer: ({ row, index }) => (
         <div
-          class="flex-bc w-full h-[32px]"
+          class="flex-bc w-full h-8"
           onMouseenter={() => (activeIndex.value = index)}
           onMouseleave={() => onMouseleave(index)}
         >

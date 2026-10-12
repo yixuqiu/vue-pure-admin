@@ -4,13 +4,13 @@ import { useI18n } from "vue-i18n";
 import { useGlobal } from "@pureadmin/utils";
 import { useNav } from "@/layout/hooks/useNav";
 
-import ArrowLeft from "@iconify-icons/ri/arrow-left-double-fill";
+import ArrowLeft from "~icons/ri/arrow-left-double-fill";
 
 interface Props {
-  isActive: boolean;
+  isActive?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   isActive: false
 });
 
@@ -18,7 +18,7 @@ const { t } = useI18n();
 const { tooltipEffect } = useNav();
 
 const iconClass = computed(() => {
-  return ["w-[16px]", "h-[16px]"];
+  return ["size-4"];
 });
 
 const { $storage } = useGlobal<GlobalPropertiesApi>();

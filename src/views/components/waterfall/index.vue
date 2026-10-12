@@ -3,9 +3,9 @@ import { getList } from "./api";
 import error from "./error.png";
 import loading from "./loading.png";
 import { ElLoading } from "element-plus";
+import { reactive, ref, nextTick } from "vue";
+import { useInfiniteScroll } from "@vueuse/core";
 import "vue-waterfall-plugin-next/dist/style.css";
-import InfiniteLoading from "v3-infinite-loading";
-import { onMounted, reactive, ref, nextTick } from "vue";
 import backTop from "@/assets/svg/back_top.svg?component";
 import { LazyImg, Waterfall } from "vue-waterfall-plugin-next";
 
@@ -55,26 +55,34 @@ const options = reactive({
 const page = ref(1);
 const list = ref([]);
 const pageSize = ref();
+const scrollbarRef = ref();
+const isLoading = ref(false);
 const loadingInstance = ref();
 
 /** 加载更多 */
 function handleLoadMore() {
+  if (isLoading.value) return Promise.resolve();
+  isLoading.value = true;
   loadingInstance.value = ElLoading.service({
     target: ".content",
     background: "transparent",
     text: "加载中"
   });
-  getList({
-    page: page.value,
-    pageSize: pageSize.value
-  }).then(res => {
-    setTimeout(() => {
-      list.value.push(...res);
-      page.value += 1;
-      nextTick(() => {
-        loadingInstance.value.close();
-      });
-    }, 500);
+  return new Promise<void>(resolve => {
+    getList({
+      page: page.value,
+      pageSize: pageSize.value
+    }).then(res => {
+      setTimeout(() => {
+        list.value.push(...res);
+        page.value += 1;
+        nextTick(() => {
+          loadingInstance.value.close();
+          isLoading.value = false;
+          resolve();
+        });
+      }, 500);
+    });
   });
 }
 
@@ -86,13 +94,21 @@ function handleClick(item) {
   console.log(item);
 }
 
-onMounted(() => {
-  handleLoadMore();
-});
+useInfiniteScroll(
+  () => scrollbarRef.value?.wrapRef,
+  () => {
+    return handleLoadMore();
+  },
+  { distance: 10 }
+);
 </script>
 
 <template>
-  <el-scrollbar max-height="calc(100vh - 120px)" class="content">
+  <el-scrollbar
+    ref="scrollbarRef"
+    max-height="calc(100vh - 120px)"
+    class="content"
+  >
     <Waterfall :list="list" v-bind="options">
       <template #item="{ item, url, index }">
         <div
@@ -106,16 +122,16 @@ onMounted(() => {
             />
           </div>
           <div class="px-4 pt-2 pb-4 border-t border-t-gray-800">
-            <h4 class="pb-4 text-gray-50 group-hover:text-yellow-300">
+            <h4 class="pb-4! text-gray-50 group-hover:text-yellow-300">
               {{ item.name }}
             </h4>
             <div
-              class="pt-3 flex justify-between items-center border-t border-t-gray-600 border-opacity-50"
+              class="pt-3 flex-bc border-t border-t-gray-600 border-opacity-50"
             >
               <div class="text-gray-50">$ {{ item.price }}</div>
               <div>
                 <button
-                  class="px-3 h-7 rounded-full bg-red-500 text-sm text-white shadow-lg transition-all duration-300 hover:bg-red-600"
+                  class="px-3! rounded-full bg-red-500 text-sm text-white shadow-lg transition-all duration-300 hover:bg-red-600 border-0"
                   @click.stop="handleDelete(item, index)"
                 >
                   删除
@@ -129,7 +145,7 @@ onMounted(() => {
 
     <!-- <div class="flex justify-center py-10">
         <button
-          class="px-5 py-2 rounded-full bg-gray-700 text-md text-white cursor-pointer hover:bg-gray-800 transition-all duration-300"
+          class="px-5! py-2! rounded-full bg-gray-700 text-md text-white cursor-pointer hover:bg-gray-800 transition-all duration-300 border-0"
           @click="handleLoadMore"
         >
           加载更多
@@ -145,9 +161,6 @@ onMounted(() => {
     >
       <backTop />
     </el-backtop>
-
-    <!-- 加载更多 -->
-    <InfiniteLoading :firstload="false" @infinite="handleLoadMore" />
   </el-scrollbar>
 </template>
 

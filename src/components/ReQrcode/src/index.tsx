@@ -11,7 +11,7 @@ import "./index.scss";
 import propTypes from "@/utils/propTypes";
 import { isString, cloneDeep } from "@pureadmin/utils";
 import QRCode, { type QRCodeRenderersOptions } from "qrcode";
-import RefreshRight from "@iconify-icons/ep/refresh-right";
+import RefreshRight from "~icons/ep/refresh-right";
 
 interface QrcodeLogo {
   src?: string;
@@ -240,7 +240,7 @@ export default defineComponent({
           )}
           {props.disabled && (
             <div
-              class="qrcode--disabled absolute top-0 left-0 flex w-full h-full items-center justify-center"
+              class="qrcode--disabled absolute top-0 left-0 flex-c size-full"
               onClick={disabledClick}
             >
               <div class="absolute top-[50%] left-[50%] font-bold">

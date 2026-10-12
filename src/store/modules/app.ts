@@ -8,8 +8,7 @@ import {
   responsiveStorageNameSpace
 } from "../utils";
 
-export const useAppStore = defineStore({
-  id: "pure-app",
+export const useAppStore = defineStore("pure-app", {
   state: (): appType => ({
     sidebar: {
       opened:
@@ -19,7 +18,7 @@ export const useAppStore = defineStore({
       withoutAnimation: false,
       isClickCollapse: false
     },
-    // 这里的layout用于监听容器拖拉后恢复对应的导航模式
+    // 这里的layout用于监听容器拖拉后恢复对应的菜单布局
     layout:
       storageLocal().getItem<StorageConfigs>(
         `${responsiveStorageNameSpace()}layout`

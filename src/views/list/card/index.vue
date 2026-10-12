@@ -6,7 +6,7 @@ import { ref, onMounted, nextTick } from "vue";
 import ListCard from "./components/ListCard.vue";
 import ListDialogForm from "./components/ListDialogForm.vue";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import AddFill from "@iconify-icons/ri/add-circle-line";
+import AddFill from "~icons/ri/add-circle-line";
 
 defineOptions({
   name: "CardList"
@@ -38,12 +38,14 @@ const dataLoading = ref(true);
 
 const getCardListData = async () => {
   try {
-    const { data } = await getCardList();
-    productList.value = data.list;
-    pagination.value = {
-      ...pagination.value,
-      total: data.list.length
-    };
+    const { code, data } = await getCardList();
+    if (code === 0) {
+      productList.value = data.list;
+      pagination.value = {
+        ...pagination.value,
+        total: data.list.length
+      };
+    }
   } catch (e) {
     console.log(e);
   } finally {
@@ -110,7 +112,7 @@ const handleManageProduct = product => {
           <el-icon class="el-input__icon">
             <IconifyIconOffline
               v-show="searchValue.length === 0"
-              icon="ri:search-line"
+              icon="ri/search-line"
             />
           </el-icon>
         </template>

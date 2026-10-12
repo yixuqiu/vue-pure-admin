@@ -2,22 +2,13 @@ import type { CSSProperties, VNode, Component } from "vue";
 
 type DoneFn = (cancel?: boolean) => void;
 type EventType =
-  | "open"
-  | "close"
-  | "openAutoFocus"
-  | "closeAutoFocus"
-  | "fullscreenCallBack";
+  "open" | "close" | "openAutoFocus" | "closeAutoFocus" | "fullscreenCallBack";
 type ArgsType = {
   /** `cancel` 点击取消按钮、`sure` 点击确定按钮、`close` 点击右上角关闭按钮或空白页或按下了esc键 */
   command: "cancel" | "sure" | "close";
 };
 type ButtonType =
-  | "primary"
-  | "success"
-  | "warning"
-  | "danger"
-  | "info"
-  | "text";
+  "primary" | "success" | "warning" | "danger" | "info" | "text";
 
 /** https://element-plus.org/zh-CN/component/dialog.html#attributes */
 type DialogProps = {
@@ -35,8 +26,20 @@ type DialogProps = {
   top?: string;
   /** 是否需要遮罩层，默认 `true` */
   modal?: boolean;
+  /** 是否允许穿透遮罩层，默认 `false`。使用时需将 `modal` 属性设置为 `false` */
+  modalPenetrable?: boolean;
+  /** 遮罩的自定义类名 */
+  modalClass?: string;
+  /** `header` 部分的自定义 `class` 名 */
+  headerClass?: string;
+  /** `body` 部分的自定义 `class` 名 */
+  bodyClass?: string;
+  /** `footer` 部分的自定义 `class` 名 */
+  footerClass?: string;
   /** `Dialog` 自身是否插入至 `body` 元素上。嵌套的 `Dialog` 必须指定该属性并赋值为 `true`，默认 `false` */
   appendToBody?: boolean;
+  /** `Dialog` 挂载到哪个 `DOM` 元素，该属性会覆盖 `append-to-body` 属性，默认 `body` */
+  appendTo?: string | HTMLElement;
   /** 是否在 `Dialog` 出现时将 `body` 滚动锁定，默认 `true` */
   lockScroll?: boolean;
   /** `Dialog` 的自定义类名 */
@@ -57,23 +60,33 @@ type DialogProps = {
   beforeClose?: (done: DoneFn) => void;
   /** 为 `Dialog` 启用可拖拽功能，默认 `false` */
   draggable?: boolean;
+  /** 拖动范围可以超出可视区，默认 `false` */
+  overflow?: boolean;
   /** 是否让 `Dialog` 的 `header` 和 `footer` 部分居中排列，默认 `false` */
   center?: boolean;
   /** 是否水平垂直对齐对话框，默认 `false` */
   alignCenter?: boolean;
   /** 当关闭 `Dialog` 时，销毁其中的元素，默认 `false` */
   destroyOnClose?: boolean;
+  /** 自定义关闭图标，默认 `Close` */
+  closeIcon?: string | Component;
+  /** 和原生的 `CSS` 的 `z-index` 相同，改变 `z` 轴的顺序 */
+  zIndex?: number;
+  /** `header` 的 `aria-level` 属性 */
+  headerAriaLevel?: string;
+  /** 对话框动画的自定义过渡配置。可以是一个字符串（过渡名称），也可以是一个包含 `Vue` 过渡属性的对象，默认 `dialog-fade` */
+  transition?: string | object;
 };
 
 //element-plus.org/zh-CN/component/popconfirm.html#attributes
 type Popconfirm = {
   /** 标题 */
   title?: string;
-  /** 确认按钮文字 */
+  /** 确定按钮文字 */
   confirmButtonText?: string;
   /** 取消按钮文字 */
   cancelButtonText?: string;
-  /** 确认按钮类型，默认 `primary` */
+  /** 确定按钮类型，默认 `primary` */
   confirmButtonType?: ButtonType;
   /** 取消按钮类型，默认 `text` */
   cancelButtonType?: ButtonType;
@@ -121,7 +134,7 @@ type ButtonProps = {
   round?: boolean;
   /** 是否为圆形按钮，默认 `false` */
   circle?: boolean;
-  /** 确认按钮的 `Popconfirm` 气泡确认框相关配置 */
+  /** 确定按钮的 `Popconfirm` 气泡确认框相关配置 */
   popconfirm?: Popconfirm;
   /** 是否为加载中状态，默认 `false` */
   loading?: boolean;
@@ -160,8 +173,10 @@ interface DialogOptions extends DialogProps {
   props?: any;
   /** 是否隐藏 `Dialog` 按钮操作区的内容 */
   hideFooter?: boolean;
-  /** 确认按钮的 `Popconfirm` 气泡确认框相关配置 */
+  /** 确定按钮的 `Popconfirm` 气泡确认框相关配置 */
   popconfirm?: Popconfirm;
+  /** 点击确定按钮后是否开启 `loading` 加载动画 */
+  sureBtnLoading?: boolean;
   /**
    * @description 自定义对话框标题的内容渲染器
    * @see {@link https://element-plus.org/zh-CN/component/dialog.html#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%A4%B4%E9%83%A8}
@@ -259,10 +274,13 @@ interface DialogOptions extends DialogProps {
     done: Function,
     {
       options,
-      index
+      index,
+      closeLoading
     }: {
       options: DialogOptions;
       index: number;
+      /** 关闭确定按钮的 `loading` 加载动画 */
+      closeLoading: Function;
     }
   ) => void;
 }

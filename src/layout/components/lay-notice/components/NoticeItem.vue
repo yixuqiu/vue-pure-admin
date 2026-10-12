@@ -4,10 +4,14 @@ import { ref, PropType, nextTick } from "vue";
 import { useNav } from "@/layout/hooks/useNav";
 import { deviceDetection } from "@pureadmin/utils";
 
-const props = defineProps({
+defineProps({
   noticeItem: {
     type: Object as PropType<ListItem>,
     default: () => {}
+  },
+  isLast: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -49,7 +53,11 @@ function hoverDescription(event, description) {
 
 <template>
   <div
-    class="notice-container border-b-[1px] border-solid border-[#f0f0f0] dark:border-[#303030]"
+    :class="[
+      'notice-container',
+      'border-0 border-solid border-[#f0f0f0] dark:border-[#303030]',
+      { 'border-b': !isLast }
+    ]"
   >
     <el-avatar
       v-if="noticeItem.avatar"
@@ -112,14 +120,12 @@ function hoverDescription(event, description) {
   max-width: 238px;
 }
 </style>
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .notice-container {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   padding: 12px 0;
-
-  // border-bottom: 1px solid #f0f0f0;
 
   .notice-container-avatar {
     margin-right: 16px;

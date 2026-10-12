@@ -28,10 +28,11 @@ import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
 import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
 import globalization from "@/assets/svg/globalization.svg?component";
-import Lock from "@iconify-icons/ri/lock-fill";
-import Check from "@iconify-icons/ep/check";
-import User from "@iconify-icons/ri/user-3-fill";
-import Info from "@iconify-icons/ri/information-line";
+import Lock from "~icons/ri/lock-fill";
+import Check from "~icons/ep/check";
+import User from "~icons/ri/user-3-fill";
+import Info from "~icons/ri/information-line";
+import Keyhole from "~icons/ri/shield-keyhole-line";
 
 defineOptions({
   name: "Login"
@@ -51,8 +52,8 @@ const currentPage = computed(() => {
 const { t } = useI18n();
 const { initStorage } = useLayout();
 initStorage();
-const { dataTheme, overallStyle, dataThemeChange } = useDataThemeChange();
-dataThemeChange(overallStyle.value);
+const { dataTheme, themeMode, dataThemeChange } = useDataThemeChange();
+dataThemeChange(themeMode.value);
 const { title, getDropdownItemStyle, getDropdownItemClass } = useNav();
 const { locale, translationCh, translationEn } = useTranslationLang();
 
@@ -68,24 +69,25 @@ const onLogin = async (formEl: FormInstance | undefined) => {
     if (valid) {
       loading.value = true;
       useUserStoreHook()
-        .loginByUsername({ username: ruleForm.username, password: "admin123" })
-        .then(res => {
-          if (res.success) {
-            // 获取后端路由
-            return initRouter().then(() => {
-              disabled.value = true;
-              router
-                .push(getTopMenu(true).path)
-                .then(() => {
-                  message(t("login.pureLoginSuccess"), { type: "success" });
-                })
-                .finally(() => (disabled.value = false));
-            });
-          } else {
-            message(t("login.pureLoginFail"), { type: "error" });
-          }
+        .loginByUsername({
+          username: ruleForm.username,
+          password: ruleForm.password
         })
-        .finally(() => (loading.value = false));
+        .then(async () => {
+          // 获取后端路由
+          await initRouter();
+          disabled.value = true;
+          router.push(getTopMenu(true).path).then(() => {
+            message(t("login.pureLoginSuccess"), { type: "success" });
+          });
+        })
+        .catch(_err => {
+          message(t("login.pureLoginFail"), { type: "error" });
+        })
+        .finally(() => {
+          disabled.value = false;
+          loading.value = false;
+        });
     }
   });
 };
@@ -96,8 +98,12 @@ const immediateDebounce: any = debounce(
   true
 );
 
-useEventListener(document, "keypress", ({ code }) => {
-  if (code === "Enter" && !disabled.value && !loading.value)
+useEventListener(document, "keydown", ({ code }) => {
+  if (
+    ["Enter", "NumpadEnter"].includes(code) &&
+    !disabled.value &&
+    !loading.value
+  )
     immediateDebounce(ruleFormRef.value);
 });
 
@@ -127,13 +133,13 @@ watch(loginDay, value => {
       <!-- 国际化 -->
       <el-dropdown trigger="click">
         <globalization
-          class="hover:text-primary hover:!bg-[transparent] w-[20px] h-[20px] ml-1.5 cursor-pointer outline-none duration-300"
+          class="hover:text-primary hover:bg-transparent! size-5 ml-1.5 cursor-pointer outline-hidden duration-300"
         />
         <template #dropdown>
           <el-dropdown-menu class="translation">
             <el-dropdown-item
               :style="getDropdownItemStyle(locale, 'zh')"
-              :class="['dark:!text-white', getDropdownItemClass(locale, 'zh')]"
+              :class="['dark:text-white!', getDropdownItemClass(locale, 'zh')]"
               @click="translationCh"
             >
               <IconifyIconOffline
@@ -145,7 +151,7 @@ watch(loginDay, value => {
             </el-dropdown-item>
             <el-dropdown-item
               :style="getDropdownItemStyle(locale, 'en')"
-              :class="['dark:!text-white', getDropdownItemClass(locale, 'en')]"
+              :class="['dark:text-white!', getDropdownItemClass(locale, 'en')]"
               @click="translationEn"
             >
               <span v-show="locale === 'en'" class="check-en">
@@ -165,7 +171,7 @@ watch(loginDay, value => {
         <div class="login-form">
           <avatar class="avatar" />
           <Motion>
-            <h2 class="outline-none">
+            <h2 class="outline-hidden">
               <TypeIt
                 :options="{ strings: [title], cursor: false, speed: 100 }"
               />
@@ -217,7 +223,7 @@ watch(loginDay, value => {
                   v-model="ruleForm.verifyCode"
                   clearable
                   :placeholder="t('login.pureVerifyCode')"
-                  :prefix-icon="useRenderIcon('ri:shield-keyhole-line')"
+                  :prefix-icon="useRenderIcon(Keyhole)"
                 >
                   <template v-slot:append>
                     <ReImageVerify v-model:code="imgCode" />
@@ -228,7 +234,7 @@ watch(loginDay, value => {
 
             <Motion :delay="250">
               <el-form-item>
-                <div class="w-full h-[20px] flex justify-between items-center">
+                <div class="w-full h-5 flex-bc">
                   <el-checkbox v-model="checked">
                     <span class="flex">
                       <select
@@ -237,7 +243,8 @@ watch(loginDay, value => {
                           width: loginDay < 10 ? '10px' : '16px',
                           outline: 'none',
                           background: 'none',
-                          appearance: 'none'
+                          appearance: 'none',
+                          border: 'none'
                         }"
                       >
                         <option value="1">1</option>
@@ -264,7 +271,7 @@ watch(loginDay, value => {
                   </el-button>
                 </div>
                 <el-button
-                  class="w-full mt-4"
+                  class="w-full mt-4!"
                   size="default"
                   type="primary"
                   :loading="loading"
@@ -278,11 +285,11 @@ watch(loginDay, value => {
 
             <Motion :delay="300">
               <el-form-item>
-                <div class="w-full h-[20px] flex justify-between items-center">
+                <div class="w-full h-5 flex-bc">
                   <el-button
                     v-for="(item, index) in operates"
                     :key="index"
-                    class="w-full mt-4"
+                    class="w-full mt-4!"
                     size="default"
                     @click="useUserStoreHook().SET_CURRENTPAGE(index + 1)"
                   >
@@ -331,7 +338,7 @@ watch(loginDay, value => {
     >
       Copyright © 2020-present
       <a
-        class="hover:text-primary"
+        class="hover:text-primary!"
         href="https://github.com/pure-admin"
         target="_blank"
       >
@@ -351,7 +358,7 @@ watch(loginDay, value => {
 }
 
 .translation {
-  ::v-deep(.el-dropdown-menu__item) {
+  :deep(.el-dropdown-menu__item) {
     padding: 5px 40px;
   }
 

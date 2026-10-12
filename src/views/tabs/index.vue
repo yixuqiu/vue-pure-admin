@@ -4,6 +4,7 @@ import {
   getNodeByUniqueId,
   appendFieldByUniqueId
 } from "@/utils/tree";
+import { useI18n } from "vue-i18n";
 import { useDetail } from "./hooks";
 import { ref, computed } from "vue";
 import { clone } from "@pureadmin/utils";
@@ -15,6 +16,7 @@ defineOptions({
   name: "Tabs"
 });
 
+const { locale } = useI18n();
 const { toDetail, router } = useDetail();
 const menusTree = clone(usePermissionStoreHook().wholeMenus, true);
 
@@ -29,6 +31,12 @@ const currentValues = ref<string[]>([]);
 const multiTags = computed(() => {
   return useMultiTagsStoreHook()?.multiTags;
 });
+
+const treeSelectProps = {
+  label: (data: any) => transformI18n(data.meta.title),
+  children: "children",
+  disabled: "disabled"
+};
 
 function onCloseTags() {
   if (currentValues.value.length === 0) return;
@@ -62,7 +70,7 @@ function onCloseTags() {
       <el-button
         v-for="index in 6"
         :key="index"
-        class="m-2"
+        class="m-2!"
         @click="toDetail({ id: index }, 'query')"
       >
         打开{{ index }}详情页
@@ -83,7 +91,7 @@ function onCloseTags() {
       <el-button
         v-for="index in 6"
         :key="index"
-        class="m-2"
+        class="m-2!"
         @click="toDetail({ id: index }, 'params')"
       >
         打开{{ index }}详情页
@@ -92,27 +100,23 @@ function onCloseTags() {
 
     <el-divider />
     <el-tree-select
+      :key="locale"
       v-model="currentValues"
-      class="!w-[300px]"
+      class="w-75!"
       node-key="uniqueId"
       placeholder="请选择要关闭的标签"
       clearable
       multiple
       filterable
       default-expand-all
-      :props="{
-        label: data => transformI18n(data.meta.title),
-        value: 'uniqueId',
-        children: 'children',
-        disabled: 'disabled'
-      }"
+      :props="treeSelectProps"
       :data="treeData"
     >
       <template #default="{ data }">
         <span>{{ transformI18n(data.meta.title) }}</span>
       </template>
     </el-tree-select>
-    <el-button class="m-2" @click="onCloseTags">关闭标签</el-button>
+    <el-button class="m-2!" @click="onCloseTags">关闭标签</el-button>
 
     <el-divider />
     <el-button @click="router.push({ name: 'Menu1-2-2' })">

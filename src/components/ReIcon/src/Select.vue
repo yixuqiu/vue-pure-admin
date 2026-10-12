@@ -2,7 +2,7 @@
 import { IconJson } from "@/components/ReIcon/data";
 import { cloneDeep, isAllEmpty } from "@pureadmin/utils";
 import { ref, computed, CSSProperties, watch } from "vue";
-import Search from "@iconify-icons/ri/search-eye-line";
+import Search from "~icons/ri/search-eye-line";
 
 type ParameterCSSProperties = (item?: string) => CSSProperties | undefined;
 
@@ -135,9 +135,7 @@ watch(
           @after-leave="onAfterLeave"
         >
           <template #reference>
-            <div
-              class="w-[40px] h-[32px] cursor-pointer flex justify-center items-center"
-            >
+            <div class="w-10 h-8 cursor-pointer flex-c">
               <IconifyIconOffline v-if="!icon" :icon="Search" />
               <IconifyIconOnline v-else :icon="inputValue" />
             </div>
@@ -158,12 +156,12 @@ watch(
               :name="pane.name"
             >
               <el-scrollbar height="220px">
-                <ul class="flex flex-wrap px-2 ml-2">
+                <ul class="flex flex-wrap px-2! ml-2!">
                   <li
                     v-for="(item, key) in pageList"
                     :key="key"
                     :title="item"
-                    class="icon-item p-2 cursor-pointer mr-2 mt-1 flex justify-center items-center border border-[#e5e7eb]"
+                    class="icon-item p-2 cursor-pointer mr-2 mt-1 flex-c border border-[#e5e7eb]"
                     :style="iconItemStyle(item)"
                     @click="onChangeIcon(item)"
                   >
@@ -194,11 +192,11 @@ watch(
               :pager-count="5"
               layout="pager"
               background
-              small
+              size="small"
               @current-change="onCurrentChange"
             />
             <el-button
-              class="justify-end mr-2 ml-2"
+              class="justify-end mx-2!"
               type="danger"
               size="small"
               text
@@ -219,8 +217,8 @@ watch(
   &:hover {
     color: var(--el-color-primary);
     border-color: var(--el-color-primary);
-    transition: all 0.4s;
     transform: scaleX(1.05);
+    transition: all 0.4s;
   }
 }
 

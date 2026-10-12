@@ -1,7 +1,8 @@
 import { http } from "@/utils/http";
 
 export type UserResult = {
-  success: boolean;
+  code: number;
+  message: string;
   data: {
     /** 头像 */
     avatar: string;
@@ -11,6 +12,8 @@ export type UserResult = {
     nickname: string;
     /** 当前登录用户的角色 */
     roles: Array<string>;
+    /** 按钮级别权限 */
+    permissions: Array<string>;
     /** `token` */
     accessToken: string;
     /** 用于调用刷新`accessToken`的接口时所需的`token` */
@@ -21,7 +24,8 @@ export type UserResult = {
 };
 
 export type RefreshTokenResult = {
-  success: boolean;
+  code: number;
+  message: string;
   data: {
     /** `token` */
     accessToken: string;
@@ -48,12 +52,14 @@ export type UserInfo = {
 };
 
 export type UserInfoResult = {
-  success: boolean;
+  code: number;
+  message: string;
   data: UserInfo;
 };
 
 type ResultTable = {
-  success: boolean;
+  code: number;
+  message: string;
   data?: {
     /** 列表数据 */
     list: Array<any>;

@@ -1,10 +1,217 @@
+# 7.0.0 (2026-04-07)
+
+### ✔️ Refactor
+
+- 重构`API`接口响应格式，带来简洁高效的接口设计
+- `stylelint`升级至`v17`版本
+- 在`vue-router`的导航守卫中，使用`return`语句替代即将弃用的`next()`
+- `eslint`升级至`v10`版本
+- 将全局配置文件`platform-config.json`中的`ShowModel`重命名为`TagsStyle`，以更准确地反映其语义
+- 使用`eslint-plugin-better-tailwindcss`插件优化`tailwindcss`类名
+- 使用`vueuse`中的`useInfiniteScroll`函数替换`v3-infinite-loading`库
+- 升级`vite`至`v8`版本，从`Rollup`和`esbuild`转向`Rolldown`和`Oxc`
+- 从`CDN`模式中移除`pinia`和`vue-demi`。最新版`pinia`不再依赖`vue-demi`，但生成的`iife`文件存在问题，等待修复后再将`pinia`加入`CDN`模式
+- 重构全局类型声明，新增`PascalCase`转`kebab-case`的类型映射，使全局注册的组件在`TSX`中支持`kebab-case`写法并获得完整类型提示
+- `typescript`升级至`v6`版本
+
+### 🎫 Feat
+
+- `layout`右上角的操作按钮添加动效
+- `RePureTableBar`与`ReVxeTableBar`组件实现全量文本国际化
+- 刷新`token`接口请求失败后，跳转到登录页面，需重新登录
+- 在`layout`的消息下拉框中，新增“查看更多”和“标为已读”功能
+- 系统配置面板新增全屏水印功能
+- `RePureTableBar`和`ReVxeTableBar`组件新增固定列功能
+
+### 🐞 Bug fixes
+
+- 修复文件上传演示接口失效问题
+- 修复`this.$storage`类型报错
+- 修复`ReDialog`和`ReDrawer`组件在打开时切换路由弹出层未关闭的问题
+- 修复标签页操作示例在切换国际化时报错
+- 锁定`axios`版本至`1.14.0`
+- 修复菜单搜索结果重复显示的问题
+
+### 🍏 Perf
+
+- 升级`vite-plugin-router-warn`至`v2`版本，兼容最新版的`vue-router`
+- 优化系统配置面板
+- 优化主题色选项风格
+- 优化接口处理逻辑
+- 优化国际化图标样式
+- 优化消息通知小红点显示逻辑
+- 动态导入`CDN`插件，避免开发模式下加载多余代码
+- 优化并精简`.husky`文件，提升`commit`提交速度
+- 规范全局自定义指令的`TypeScript`声明，优化`directives.d.ts`文件
+- 精简`types/shims-vue.d.ts`类型文件，移除冗余声明
+- 优化`prettier`配置
+
+# 6.3.0 (2025-12-10)
+
+### ✔️ Refactor
+
+- 将系统配置中的“整体风格”更名为“主题模式”，“导航模式”更名为“菜单布局”，以提升命名的专业性与清晰度
+- 迁移`typescript-eslint`已弃用的`tseslint.config`配置方式
+
+### 🎫 Feat
+
+- 添加颜色选择器面板组件
+
+### 🐞 Bug fixes
+
+- 修复导航菜单在使用`iconfont`图标时，选中/激活状态的样式显示异常问题
+- 修复`RePureTableBar`和`ReVxeTableBar`组件的列设置弹窗样式问题
+
+### 🍏 Perf
+
+- `ReDialog`组件适配`el-dialog`最新版本的`API`变更以及补充相关示例
+- `ReDrawer`组件适配`el-drawer`最新版本的`API`变更以及补充相关示例
+- `message`工具函数适配`ElMessage`最新版本的`API`变更以及补充相关示例
+- 导入`element-plus`最新版本的新组件
+- 优化页签风格为谷歌模式下的布局和样式
+
+# 6.2.0 (2025-10-16)
+
+### 🎫 Feat
+
+- 添加全屏`403`、`404`、`500`页面，全屏错误页面清晰且安全，提升用户体验
+
+### 🐞 Bug fixes
+
+- 修复内置的首页未设置`name`导致设置页面缓存后缓存无效的问题
+- 修复在内嵌同源`iframe`页面中，当其注册了`beforeunload`事件时，右键标签页点击重新加载导致浏览器弹出两次确认拦截的问题
+- 修复设置了`keepAlive: true`的页面在初次加载缓慢的情况下出现的页面缓存失效的问题
+- 修复不同路由使用相同参数时，多个标签页会同时被激活的问题
+- 修复`params`传参模式下标签页右键菜单显示不正确的问题
+
+### 🍏 Perf
+
+- 优化`nprogress`进度条，页面重进或接口请求时不再显示进度条，提升用户体验
+- 优化当捕获所有未匹配路由并跳转全屏`404`页面的时机
+- 显式配置`Tailwind CSS`入口文件路径，优化`Tailwind CSS IntelliSense`插件的上下文识别与提示性能
+
+# 6.1.0 (2025-07-31)
+
+### ✔️ Refactor
+
+- 升级至`vite7`，更新依赖，相关兼容处理
+
+### 🐞 Bug fixes
+
+- 修复`ReSegmented`分段控制器组件在浅色和深色主题模式切换时的闪烁问题
+- 修复`resetRouter`未清空全部路由数据问题
+- 修复标签页-关闭左侧标签页关闭异常问题
+
+### 🍏 Perf
+
+- 优化导航样式
+- 升级`@pureadmin/table`兼容最新版`element-plus`的`el-table`的所有`API`
+
+# 6.0.0 (2025-04-10)
+
+### ✔️ Refactor
+
+- 重构图标模块，使用`@iconify/json`替换不再维护更新的`@iconify-icons/*`依赖，优化使用体验，确保图标库可持续更新并支持`Tree-shaking`
+- 升级`tailwindcss`至`v4`版本，带来更快的构建速度、更简化的安装和配置、提供专属`vite`插件
+
+### 🎫 Feat
+
+- 添加`Ai`聊天组件示例
+- 添加`tagOnClick`标签切换全局公共事件
+- 添加代码编辑器示例
+- 添加`Markdown`示例
+- 添加滑块示例
+
+### 🐞 Bug fixes
+
+- 修复`aria-hidden`报错
+- 修复使用`this`语法时无法显示代码提示的问题并更新`pinia`相关语法
+
+### 🍏 Perf
+
+- 修复组件-瀑布流无限滚动示例中失效的链接
+- 更新`vue-flow`，相关兼容处理
+- 删除已弃用的依赖包`eslint-define-config`，升级`eslint`至最新版本，相关兼容处理
+- 优化`src/style/dark.scss`语法
+- 优化登录传参
+- 使用`keydown`替换`keypress`，`keypress`事件已弃用
+
+# 5.9.0 (2024-12-10)
+
+### ✔️ Refactor
+
+- 升级`vite`至`v6`版本，升级`sass`至最新版，重构主题写法，弃用 [@pureadmin/theme](https://www.npmjs.com/package/@pureadmin/theme)，点击查看 [相关优化点细节](https://github.com/pure-admin/vue-pure-admin/pull/1188#issue-2630095115)。对于拥有 [Max版本](https://pure-admin.cn/pages/service/#max-%E7%89%88%E6%9C%AC) 的用户平台强烈建议升级，后续`Max版本用户`会享有一套更现代、美观且自定义程度高的主题色
+- 使用 [code-inspector-plugin](https://www.npmjs.com/package/code-inspector-plugin) 替换 [vite-plugin-vue-inspector](https://www.npmjs.com/package/vite-plugin-vue-inspector)
+
+### 🎫 Feat
+
+- 新增函数式抽屉组件
+- `pure-table`添加动态表头示例
+
+### 🐞 Bug fixes
+
+- 修复在菜单、部门管理中，表格展开后启用或关闭全屏功能时，表格高度未自动适应的问题
+
+### 🍏 Perf
+
+- 优化用户管理左侧部门树的布局
+
+# 5.8.0 (2024-08-19)
+
+### 🎫 Feat
+
+- 新增第二种按钮权限指令（根据登录接口返回的`permissions`字段进行判断）
+- 函数式弹框`ReDialog`添加点击确认按钮后是否开启`loading`加载动画功能
+- `PureTableBar`组件添加全屏和退出全屏功能
+- `VxeTableBar`组件添加全屏和退出全屏功能
+- `ReDialog`组件的确定按钮提供关闭按钮动画`closeLoading`功能
+- 添加开发环境代码调试`vite-plugin-vue-inspector`插件，提升开发体验
+- 添加`vite-plugin-checker`插件，更严格的类型和`eslint`校验
+
+### 🐞 Bug fixes
+
+- 修复配置路由属性`fixedTag`为`false`后当前标签页不可关闭的问题
+- 修复顶部菜单模式下`logo`不可隐藏的问题
+
+### 🍏 Perf
+
+- 优化自定义指令的类型提示
+- 优化登录页回车登录功能
+- 优化移动端左侧菜单遮罩层级
+- 优化系统管理-角色管理的权限功能样式
+- 升级依赖，`element-plus`最新版兼容处理
+
+# 5.7.0 (2024-06-04)
+
+### 🎫 Feat
+
+- 添加谷歌风格的页签
+
+### 🐞 Bug fixes
+
+- 修复在火狐浏览器中菜单折叠后，文字超出未隐藏的问题
+
+# 5.6.0 (2024-05-14)
+
+### ✔️ Refactor
+
+- 升级`pnpm`至`v9`版本，规定`pnpm`版本`>=9`
+
+### 🐞 Bug fixes
+
+- 修复点击外链会跳转两次的问题
+
+### 🍏 Perf
+
+- 优化`ReSegmented`组件
+
 # 5.5.0 (2024-05-07)
 
 ### 📄 Docs
 
 文档站和完整版预览站地址更换！
 
-- 最新文档站地址：https://pure-admin.github.io/pure-admin-doc
+- 最新文档站地址：https://pure-admin.cn
 - 最新完整版预览站地址：https://pure-admin.github.io/vue-pure-admin
 
 ### ✔️ Refactor
@@ -96,8 +303,8 @@
 
 - 修复`windwos`下点击注册页面会出现滚动条问题
 - 修复`windows`下页面切换，内容区会出现滚动条问题
-- 修复`pure-table`带状态表格在深色整体风格下状态样式消失的问题
-- 修复系统配置中开启灰色模式和深色整体风格，刷新页面整体风格异常
+- 修复`pure-table`带状态表格在深色主题模式下状态样式消失的问题
+- 修复系统配置中开启灰色模式和深色主题模式，刷新页面主题模式异常
 
 ### 🍏 Perf
 
@@ -150,7 +357,7 @@
 - 内嵌`iframe`页支持设置`keepAlive`，保持页面状态
 - 优化导航，弹出的菜单超出内容区自适应且可滚动
 - 添加文件上传示例
-- 添加整体风格自适应操作系统浅色、深色、自动主题功能
+- 添加主题模式自适应操作系统浅色、深色、自动主题功能
 - 添加页脚
 - 支持多标签页打开已经登录的系统后无需再登录并添加内免登录功能（用户可选择免登录的天数）
 - 带来高级感的终端命令行
@@ -350,7 +557,7 @@
 - 修复菜单搜索功能弹框打开后搜索框未自动聚集的问题
 - 修复按 `ESC` 退出全屏后，工具栏按钮文案展示问题
 - 修复移动端通知栏 `tooltip` 点击穿透问题
-- 修复当左侧菜单收起后，切换到 `horizontal` 导航模式时文字不展示的问题
+- 修复当左侧菜单收起后，切换到 `horizontal` 菜单布局时文字不展示的问题
 - 修复导航 `tab` 关闭其他标签页无法重置状态问题
 - 修复 `getHistoryMode` 函数中环境变量未初始化带来的页面热更新报错
 - 修复导航 `tab` 过多导致关闭左侧标签页无法正常显示
@@ -404,7 +611,7 @@
 ### ✔️ Refactor
 
 - 完全移除了 `lodash` 和其相关库
-  [点击此处查看为什么移除？如何自行集成？](https://pure-admin.github.io/pure-admin-doc/pages/FAQ/#%E5%B9%B3%E5%8F%B0%E5%9C%A8-v3-9-5-%E7%89%88%E6%9C%AC%E5%AE%8C%E5%85%A8%E7%A7%BB%E9%99%A4%E4%BA%86-lodash-%E5%92%8C%E5%85%B6%E7%9B%B8%E5%85%B3%E5%BA%93-%E4%B8%BA%E4%BB%80%E4%B9%88%E7%A7%BB%E9%99%A4-%E5%A6%82%E4%BD%95%E8%87%AA%E8%A1%8C%E9%9B%86%E6%88%90)
+  [点击此处查看为什么移除？如何自行集成？](https://pure-admin.cn/pages/FAQ/#%E5%B9%B3%E5%8F%B0%E5%9C%A8-v3-9-5-%E7%89%88%E6%9C%AC%E5%AE%8C%E5%85%A8%E7%A7%BB%E9%99%A4%E4%BA%86-lodash-%E5%92%8C%E5%85%B6%E7%9B%B8%E5%85%B3%E5%BA%93-%E4%B8%BA%E4%BB%80%E4%B9%88%E7%A7%BB%E9%99%A4-%E5%A6%82%E4%BD%95%E8%87%AA%E8%A1%8C%E9%9B%86%E6%88%90)
 
 ### 🎫 Feat
 
@@ -424,7 +631,7 @@
 ### ✔️ Refactor
 
 - 完全移除了 `vxe-table`，移除后，完整版整体打包大小减少 `1.82MB`，首启动时长基本和精简版持平 🐮
-  [点击此处查看为什么移除？如何自行集成？](https://pure-admin.github.io/pure-admin-doc/pages/FAQ/#%E5%B9%B3%E5%8F%B0%E5%9C%A8-v3-9-4-%E7%89%88%E6%9C%AC%E5%AE%8C%E5%85%A8%E7%A7%BB%E9%99%A4%E4%BA%86-vxe-table-%E4%B8%BA%E4%BB%80%E4%B9%88%E7%A7%BB%E9%99%A4-%E5%A6%82%E4%BD%95%E8%87%AA%E8%A1%8C%E9%9B%86%E6%88%90)
+  [点击此处查看为什么移除？如何自行集成？](https://pure-admin.cn/pages/FAQ/#%E5%B9%B3%E5%8F%B0%E5%9C%A8-v3-9-4-%E7%89%88%E6%9C%AC%E5%AE%8C%E5%85%A8%E7%A7%BB%E9%99%A4%E4%BA%86-vxe-table-%E4%B8%BA%E4%BB%80%E4%B9%88%E7%A7%BB%E9%99%A4-%E5%A6%82%E4%BD%95%E8%87%AA%E8%A1%8C%E9%9B%86%E6%88%90)
 
 ### 🎫 Feat
 
@@ -637,7 +844,7 @@
 
 ### ✔️ Refactor
 
-- 使用 `tailwindcss` 替换 `unocss`，新增 `tailwindcss` [使用文档](https://pure-admin.github.io/pure-admin-doc/pages/tailwindcss/)
+- 使用 `tailwindcss` 替换 `unocss`，新增 `tailwindcss` [使用文档](https://pure-admin.cn/pages/tailwindcss/)
 
 ### 🐞 Bug fixes
 

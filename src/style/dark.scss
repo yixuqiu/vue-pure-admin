@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "element-plus/theme-chalk/src/dark/css-vars.scss" as *;
 
 /* 整体暗色风格适配 */
@@ -115,17 +116,28 @@ html.dark {
           background-color: rgb(255 255 255 / 12%);
         }
       }
-    }
-  }
 
-  /* 系统配置面板 */
-  .right-panel-items {
-    .el-divider__text {
-      --el-bg-color: var(--el-bg-color);
-    }
+      .chrome-tab {
+        .tag-title {
+          color: #666;
+        }
 
-    .el-divider--horizontal {
-      border-top: none;
+        &:hover {
+          .chrome-tab__bg {
+            color: #333;
+          }
+
+          .tag-title {
+            color: #adadad;
+          }
+        }
+      }
+
+      &.is-active {
+        .chrome-tab__bg {
+          color: var(--el-color-primary-light-8) !important;
+        }
+      }
     }
   }
 

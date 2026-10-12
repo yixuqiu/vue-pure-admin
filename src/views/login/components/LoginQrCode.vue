@@ -8,7 +8,7 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <Motion class="-mt-2 -mb-2">
+  <Motion class="-my-2">
     <ReQrcode :text="t('login.pureTest')" />
   </Motion>
   <Motion :delay="100">
@@ -18,7 +18,7 @@ const { t } = useI18n();
   </Motion>
   <Motion :delay="150">
     <el-button
-      class="w-full mt-4"
+      class="w-full mt-4!"
       @click="useUserStoreHook().SET_CURRENTPAGE(0)"
     >
       {{ t("login.pureBack") }}

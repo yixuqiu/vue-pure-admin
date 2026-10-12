@@ -4,10 +4,14 @@ import { type MessageHandler, ElMessage } from "element-plus";
 
 type messageStyle = "el" | "antd";
 type messageTypes = "info" | "success" | "warning" | "error";
+type messagePlacement =
+  "top" | "top-left" | "top-right" | "bottom" | "bottom-left" | "bottom-right";
 
 interface MessageParams {
   /** 消息类型，可选 `info` 、`success` 、`warning` 、`error` ，默认 `info` */
   type?: messageTypes;
+  /** 是否纯色，默认 `false` */
+  plain?: boolean;
   /** 自定义图标，该属性会覆盖 `type` 的图标 */
   icon?: any;
   /** 是否将 `message` 属性作为 `HTML` 片段处理，默认 `false` */
@@ -18,14 +22,16 @@ interface MessageParams {
   duration?: number;
   /** 是否显示关闭按钮，默认值 `false` */
   showClose?: boolean;
-  /** 文字是否居中，默认值 `false` */
-  center?: boolean;
-  /** `Message` 距离窗口顶部的偏移量，默认 `20` */
+  /** `Message` 消息距离窗口边缘的偏移量，默认 `16` */
   offset?: number;
+  /** `Message` 消息放置位置，默认 `top` */
+  placement?: messagePlacement;
   /** 设置组件的根元素，默认 `document.body` */
   appendTo?: string | HTMLElement;
   /** 合并内容相同的消息，不支持 `VNode` 类型的消息，默认值 `false` */
   grouping?: boolean;
+  /** 重复次数，类似于 `Badge` 。当和 `grouping` 属性一起使用时作为初始数量使用，默认值 `1` */
+  repeatNum?: number;
   /** 关闭时的回调函数, 参数为被关闭的 `message` 实例 */
   onClose?: Function | null;
 }
@@ -48,28 +54,32 @@ const message = (
     const {
       icon,
       type = "info",
+      plain = false,
       dangerouslyUseHTMLString = false,
       customClass = "antd",
       duration = 2000,
       showClose = false,
-      center = false,
-      offset = 20,
+      offset = 16,
+      placement = "top",
       appendTo = document.body,
       grouping = false,
+      repeatNum = 1,
       onClose
     } = params;
 
     return ElMessage({
       message,
-      type,
       icon,
+      type,
+      plain,
       dangerouslyUseHTMLString,
       duration,
       showClose,
-      center,
       offset,
+      placement,
       appendTo,
       grouping,
+      repeatNum,
       // 全局搜 pure-message 即可知道该类的样式位置
       customClass: customClass === "antd" ? "pure-message" : "",
       onClose: () => (isFunction(onClose) ? onClose() : null)

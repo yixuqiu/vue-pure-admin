@@ -196,8 +196,8 @@ const next = (actives: number, values: any) => {
   <PlusStepsForm
     v-model="active"
     simple
-    class="w-[800px] m-auto"
-    :data="stepForm"
+    class="w-200 m-auto"
+    :data="stepForm as any"
     align-center
     @next="next"
   />

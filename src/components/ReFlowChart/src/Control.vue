@@ -3,7 +3,7 @@ import { ref, unref, onMounted } from "vue";
 import { LogicFlow } from "@logicflow/core";
 
 interface Props {
-  lf: LogicFlow;
+  lf?: LogicFlow;
   catTurboData?: boolean;
 }
 
@@ -14,9 +14,6 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (e: "catData"): void;
 }>();
-
-const controlButton3 = ref();
-const controlButton4 = ref();
 
 const focusIndex = ref<Number>(-1);
 const titleLists = ref([
@@ -87,8 +84,8 @@ const onEnter = key => {
 
 onMounted(() => {
   props.lf.on("history:change", ({ data: { undoAble, redoAble } }) => {
-    unref(titleLists)[3].disabled = unref(controlButton3).disabled = !undoAble;
-    unref(titleLists)[4].disabled = unref(controlButton4).disabled = !redoAble;
+    unref(titleLists)[3].disabled = !undoAble;
+    unref(titleLists)[4].disabled = !redoAble;
   });
 });
 </script>
@@ -106,7 +103,6 @@ onMounted(() => {
         @mouseleave.prevent="focusIndex = -1"
       >
         <button
-          :ref="'controlButton' + key"
           v-tippy="{
             content: item.text
           }"
@@ -114,7 +110,8 @@ onMounted(() => {
           :style="{
             cursor: item.disabled === false ? 'pointer' : 'not-allowed',
             color: item.disabled === false ? '' : '#00000040',
-            background: 'transparent'
+            background: 'transparent',
+            border: 'none'
           }"
           @click="onControl(item, key)"
         >

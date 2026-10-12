@@ -33,7 +33,7 @@ const optionsBasis: Array<OptionsType> = [
         v-for="(item, index) in chartData"
         :key="index"
         v-motion
-        class="mb-[18px]"
+        class="mb-4.5"
         :value="6"
         :md="12"
         :sm="12"
@@ -56,7 +56,7 @@ const optionsBasis: Array<OptionsType> = [
               {{ item.name }}
             </span>
             <div
-              class="w-8 h-8 flex justify-center items-center rounded-md"
+              class="size-8 flex-c rounded-md"
               :style="{
                 backgroundColor: isDark ? 'transparent' : item.bgColor
               }"
@@ -65,6 +65,7 @@ const optionsBasis: Array<OptionsType> = [
                 :icon="item.icon"
                 :color="item.color"
                 width="18"
+                height="18"
               />
             </div>
           </div>
@@ -80,18 +81,18 @@ const optionsBasis: Array<OptionsType> = [
             </div>
             <ChartLine
               v-if="item.data.length > 1"
-              class="!w-1/2"
+              class="w-1/2!"
               :color="item.color"
               :data="item.data"
             />
-            <ChartRound v-else class="!w-1/2" />
+            <ChartRound v-else class="w-1/2!" />
           </div>
         </el-card>
       </re-col>
 
       <re-col
         v-motion
-        class="mb-[18px]"
+        class="mb-4.5"
         :value="18"
         :xs="24"
         :initial="{
@@ -122,7 +123,7 @@ const optionsBasis: Array<OptionsType> = [
 
       <re-col
         v-motion
-        class="mb-[18px]"
+        class="mb-4.5"
         :value="6"
         :xs="24"
         :initial="{
@@ -169,7 +170,7 @@ const optionsBasis: Array<OptionsType> = [
 
       <re-col
         v-motion
-        class="mb-[18px]"
+        class="mb-4.5"
         :value="18"
         :xs="24"
         :initial="{
@@ -184,17 +185,19 @@ const optionsBasis: Array<OptionsType> = [
           }
         }"
       >
-        <el-card shadow="never" class="h-[580px]">
+        <el-card shadow="never">
           <div class="flex justify-between">
             <span class="text-md font-medium">数据统计</span>
           </div>
-          <WelcomeTable class="mt-3" />
+          <el-scrollbar max-height="504" class="mt-3">
+            <WelcomeTable />
+          </el-scrollbar>
         </el-card>
       </re-col>
 
       <re-col
         v-motion
-        class="mb-[18px]"
+        class="mb-4.5"
         :value="6"
         :xs="24"
         :initial="{
@@ -268,6 +271,10 @@ const optionsBasis: Array<OptionsType> = [
   .el-timeline-item {
     margin: 0 6px;
   }
+}
+
+:deep(.el-timeline.is-start) {
+  padding-left: 0;
 }
 
 .main-content {

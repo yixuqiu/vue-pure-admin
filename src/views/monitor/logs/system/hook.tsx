@@ -6,7 +6,7 @@ import type { PaginationProps } from "@pureadmin/table";
 import { type Ref, reactive, ref, onMounted, toRaw } from "vue";
 import { getKeyList, useCopyToClipboard } from "@pureadmin/utils";
 import { getSystemLogsList, getSystemLogsDetail } from "@/api/system";
-import Info from "@iconify-icons/ri/question-line";
+import Info from "~icons/ri/question-line";
 
 export function useRole(tableRef: Ref) {
   const form = reactive({
@@ -61,7 +61,7 @@ export function useRole(tableRef: Ref) {
       headerRenderer: () => (
         <span class="flex-c">
           请求接口
-          <iconifyIconOffline
+          <iconify-icon-offline
             icon={Info}
             class="ml-1 cursor-help"
             v-tippy={{
@@ -204,11 +204,13 @@ export function useRole(tableRef: Ref) {
 
   async function onSearch() {
     loading.value = true;
-    const { data } = await getSystemLogsList(toRaw(form));
-    dataList.value = data.list;
-    pagination.total = data.total;
-    pagination.pageSize = data.pageSize;
-    pagination.currentPage = data.currentPage;
+    const { code, data } = await getSystemLogsList(toRaw(form));
+    if (code === 0) {
+      dataList.value = data.list;
+      pagination.total = data.total;
+      pagination.pageSize = data.pageSize;
+      pagination.currentPage = data.currentPage;
+    }
 
     setTimeout(() => {
       loading.value = false;

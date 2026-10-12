@@ -24,7 +24,7 @@ const filteredItems = computed(() => {
       水平模式 horizontal
       <el-input
         v-model="search"
-        class="mr-2 !w-[1/1.5]"
+        class="mr-2 w-[1/1.5]!"
         clearable
         placeholder="Filter..."
         style="width: 300px"
@@ -37,11 +37,20 @@ const filteredItems = computed(() => {
       direction="horizontal"
       class="scroller"
     >
-      <template #default="{ item, index, active }">
+      <template
+        #default="{
+          item,
+          index,
+          active
+        }: {
+          item: any;
+          index: number;
+          active: boolean;
+        }"
+      >
         <DynamicScrollerItem
           :item="item"
           :active="active"
-          :size-dependencies="[item.id]"
           :data-index="index"
           :data-active="active"
           :title="`Click to change message ${index}`"

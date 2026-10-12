@@ -1,10 +1,10 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { reactive, ref } from "vue";
 import { formUpload } from "@/api/mock";
 import { message } from "@/utils/message";
 import { createFormData } from "@pureadmin/utils";
 
-import UploadIcon from "@iconify-icons/ri/upload-2-line";
+import UploadIcon from "~icons/ri/upload-2-line?width=26&height=26";
 
 const formRef = ref();
 const uploadRef = ref();
@@ -23,8 +23,8 @@ const submitForm = formEl => {
         date: validateForm.date // 别的字段
       });
       formUpload(formData)
-        .then(({ success }) => {
-          if (success) {
+        .then(({ code }) => {
+          if (code === 0) {
             message("提交成功", { type: "success" });
           } else {
             message("提交失败");
@@ -58,15 +58,11 @@ const resetForm = formEl => {
         drag
         multiple
         action="#"
-        class="!w-[200px]"
+        class="w-50!"
         :auto-upload="false"
       >
         <div class="el-upload__text">
-          <IconifyIconOffline
-            :icon="UploadIcon"
-            width="26"
-            class="m-auto mb-2"
-          />
+          <UploadIcon class="m-auto mb-2" />
           可点击或拖拽上传
         </div>
       </el-upload>
@@ -79,7 +75,7 @@ const resetForm = formEl => {
       <el-date-picker
         v-model="validateForm.date"
         type="datetime"
-        class="!w-[200px]"
+        class="w-50!"
         placeholder="请选择日期时间"
         value-format="YYYY-MM-DD HH:mm:ss"
       />

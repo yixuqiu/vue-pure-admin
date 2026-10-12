@@ -6,14 +6,14 @@ import { useRouter } from "vue-router";
 import SearchResult from "./SearchResult.vue";
 import SearchFooter from "./SearchFooter.vue";
 import { useNav } from "@/layout/hooks/useNav";
+import { transformI18n } from "@/plugins/i18n";
 import SearchHistory from "./SearchHistory.vue";
-import { transformI18n, $t } from "@/plugins/i18n";
 import type { optionsItem, dragItem } from "../types";
 import { ref, computed, shallowRef, watch } from "vue";
 import { useDebounceFn, onKeyStroke } from "@vueuse/core";
 import { usePermissionStoreHook } from "@/store/modules/permission";
 import { cloneDeep, isAllEmpty, storageLocal } from "@pureadmin/utils";
-import SearchIcon from "@iconify-icons/ri/search-line";
+import SearchIcon from "~icons/ri/search-line";
 
 interface Props {
   /** 弹窗显隐 */
@@ -95,10 +95,17 @@ function setStorageItem(key, value) {
 /** 将菜单树形结构扁平化为一维数组，用于菜单查询 */
 function flatTree(arr) {
   const res = [];
-  function deep(arr) {
+  function deep(arr, parentIcon?) {
     arr.forEach(item => {
-      res.push(item);
-      item.children && deep(item.children);
+      if (!item.children || item.children.length === 0) {
+        const menuItem =
+          !item.meta?.icon && parentIcon
+            ? { ...item, meta: { ...item.meta, icon: parentIcon } }
+            : item;
+        res.push(menuItem);
+      } else {
+        deep(item.children, item.meta?.icon);
+      }
     });
   }
   deep(arr);
@@ -297,10 +304,7 @@ onKeyStroke("ArrowDown", handleDown);
       @input="handleSearch"
     >
       <template #prefix>
-        <IconifyIconOffline
-          :icon="SearchIcon"
-          class="text-primary w-[24px] h-[24px]"
-        />
+        <IconifyIconOffline :icon="SearchIcon" class="text-primary size-6" />
       </template>
     </el-input>
     <div class="search-content">

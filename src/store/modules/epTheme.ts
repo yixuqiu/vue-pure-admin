@@ -6,8 +6,7 @@ import {
   responsiveStorageNameSpace
 } from "../utils";
 
-export const useEpThemeStore = defineStore({
-  id: "pure-epTheme",
+export const useEpThemeStore = defineStore("pure-epTheme", {
   state: () => ({
     epThemeColor:
       storageLocal().getItem<StorageConfigs>(
@@ -22,7 +21,7 @@ export const useEpThemeStore = defineStore({
     getEpThemeColor(state) {
       return state.epThemeColor;
     },
-    /** 用于mix导航模式下hamburger-svg的fill属性 */
+    /** 用于mix菜单布局下hamburger-svg的fill属性 */
     fill(state) {
       if (state.epTheme === "light") {
         return "#409eff";

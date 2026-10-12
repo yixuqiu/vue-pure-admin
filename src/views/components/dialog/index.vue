@@ -129,7 +129,7 @@ function onHeaderRendererClick() {
         <h4 id={titleId} class={titleClass}>
           自定义头部
         </h4>
-        <el-button type="danger" onClick={close}>
+        <el-button type="danger" onClick={() => close()}>
           关闭
         </el-button>
       </div>
@@ -280,11 +280,11 @@ function onUpdateClick() {
   });
 }
 
-// popconfirm 确认框
+// Popconfirm 确认框
 function onPopconfirmClick() {
   addDialog({
     width: "30%",
-    title: "popconfirm确认框示例",
+    title: "Popconfirm确认框示例",
     popconfirm: { title: "是否确认修改当前数据" },
     contentRenderer: () => <p>点击右下方确定按钮看看效果吧</p>
   });
@@ -450,6 +450,29 @@ function onBeforeSureClick() {
     }
   });
 }
+
+function onSureBtnLoading() {
+  addDialog({
+    sureBtnLoading: true,
+    title: "点击底部确定按钮可开启按钮动画",
+    contentRenderer: () => <p>弹框内容-点击底部确定按钮可开启按钮动画</p>,
+    beforeSure: (done, { closeLoading }) => {
+      // closeLoading() // 关闭确定按钮动画，不关闭弹框
+      // done() // 关闭确定按钮动画并关闭弹框
+      setTimeout(() => done(), 800);
+    }
+  });
+}
+
+// 自定义动画
+function onTransitionClick(title, transition) {
+  addDialog({
+    width: "30%",
+    title,
+    transition,
+    contentRenderer: () => <p>{JSON.stringify(transition)}</p>
+  });
+}
 </script>
 
 <template>
@@ -506,7 +529,7 @@ function onBeforeSureClick() {
       <el-button @click="onCloseCallBackClick"> 关闭后的回调 </el-button>
       <el-button @click="onNestingClick"> 嵌套的弹框 </el-button>
       <el-button @click="onUpdateClick"> 更改弹框自身属性值 </el-button>
-      <el-button @click="onPopconfirmClick">popconfirm确认框</el-button>
+      <el-button @click="onPopconfirmClick">Popconfirm确认框</el-button>
     </el-space>
     <el-divider />
     <el-space wrap>
@@ -534,6 +557,116 @@ function onBeforeSureClick() {
       <el-button @click="onBeforeSureClick">
         点击底部确定按钮的回调（会暂停弹框的关闭，经常用于新增、修改弹框内容后调用接口）
       </el-button>
+      <el-button @click="onSureBtnLoading">
+        点击底部确定按钮可开启按钮动画
+      </el-button>
+    </el-space>
+    <el-divider />
+    <el-space wrap>
+      <el-button
+        @click="onTransitionClick('淡入淡出动画（默认）', 'dialog-fade')"
+      >
+        淡入淡出动画（默认）
+      </el-button>
+      <el-button @click="onTransitionClick('缩放动画', 'dialog-scale')">
+        缩放动画
+      </el-button>
+      <el-button @click="onTransitionClick('滑动动画', 'dialog-slide')">
+        滑动动画
+      </el-button>
+      <el-button @click="onTransitionClick('弹跳动画', 'dialog-bounce')">
+        弹跳动画
+      </el-button>
+      <el-button
+        @click="
+          onTransitionClick('自定义动画事件处理器（可配置对象）', {
+            name: 'dialog-custom-object',
+            appear: true,
+            mode: 'out-in',
+            duration: 500
+          })
+        "
+      >
+        自定义动画事件处理器（可配置对象）
+      </el-button>
     </el-space>
   </el-card>
 </template>
+
+<style>
+/* Scale Animation */
+.dialog-scale-enter-active,
+.dialog-scale-leave-active,
+.dialog-scale-enter-active .el-dialog,
+.dialog-scale-leave-active .el-dialog {
+  transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.dialog-scale-enter-from,
+.dialog-scale-leave-to {
+  opacity: 0;
+}
+
+.dialog-scale-enter-from .el-dialog,
+.dialog-scale-leave-to .el-dialog {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+/* Slide Animation */
+.dialog-slide-enter-active,
+.dialog-slide-leave-active,
+.dialog-slide-enter-active .el-dialog,
+.dialog-slide-leave-active .el-dialog {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.dialog-slide-enter-from,
+.dialog-slide-leave-to {
+  opacity: 0;
+}
+
+.dialog-slide-enter-from .el-dialog,
+.dialog-slide-leave-to .el-dialog {
+  opacity: 0;
+  transform: translateY(-100px);
+}
+
+/* Bounce Animation */
+.dialog-bounce-enter-active,
+.dialog-bounce-leave-active,
+.dialog-bounce-enter-active .el-dialog,
+.dialog-bounce-leave-active .el-dialog {
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.dialog-bounce-enter-from,
+.dialog-bounce-leave-to {
+  opacity: 0;
+}
+
+.dialog-bounce-enter-from .el-dialog,
+.dialog-bounce-leave-to .el-dialog {
+  opacity: 0;
+  transform: scale(0.3) translateY(-50px);
+}
+
+/* Object Configuration Animation */
+.dialog-custom-object-enter-active,
+.dialog-custom-object-leave-active,
+.dialog-custom-object-enter-active .el-dialog,
+.dialog-custom-object-leave-active .el-dialog {
+  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.dialog-custom-object-enter-from,
+.dialog-custom-object-leave-to {
+  opacity: 0;
+}
+
+.dialog-custom-object-enter-from .el-dialog,
+.dialog-custom-object-leave-to .el-dialog {
+  opacity: 0;
+  transform: rotate(180deg) scale(0.5);
+}
+</style>

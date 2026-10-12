@@ -127,7 +127,6 @@ const columns: PlusColumn[] = [
     fieldProps: {
       maxlength: 10,
       showWordLimit: true,
-      // @ts-expect-error
       autosize: { minRows: 2, maxRows: 4 }
     }
   }
@@ -150,7 +149,7 @@ const handleReset = () => {
 <template>
   <PlusForm
     v-model="state"
-    class="w-[450px] m-auto"
+    class="w-112.5 m-auto"
     :columns="columns"
     :rules="rules"
     label-position="right"

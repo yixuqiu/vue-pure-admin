@@ -1,31 +1,47 @@
-import { cdn } from "./cdn";
 import vue from "@vitejs/plugin-vue";
-import { pathResolve } from "./utils";
-import { viteBuildInfo } from "./info";
 import svgLoader from "vite-svg-loader";
+import Icons from "unplugin-icons/vite";
 import type { PluginOption } from "vite";
+import { pathResolve } from "./utils.ts";
+import { viteBuildInfo } from "./info.ts";
 import vueJsx from "@vitejs/plugin-vue-jsx";
-import { configCompressPlugin } from "./compress";
+import tailwindcss from "@tailwindcss/vite";
 import removeNoMatch from "vite-plugin-router-warn";
+import { configCompressPlugin } from "./compress.ts";
 import { visualizer } from "rollup-plugin-visualizer";
 import removeConsole from "vite-plugin-remove-console";
-import { themePreprocessorPlugin } from "@pureadmin/theme";
 import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
-import { genScssMultipleScopeVars } from "../src/layout/theme";
+import { codeInspectorPlugin } from "code-inspector-plugin";
 import { vitePluginFakeServer } from "vite-plugin-fake-server";
 
-export function getPluginsList(
+export async function getPluginsList(
   VITE_CDN: boolean,
   VITE_COMPRESSION: ViteCompression
-): PluginOption[] {
+): Promise<PluginOption[]> {
   const lifecycle = process.env.npm_lifecycle_event;
   return [
-    vue(),
+    tailwindcss(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: tag => tag === "deep-chat"
+        }
+      }
+    }),
     // jsx、tsx语法支持
     vueJsx(),
     VueI18nPlugin({
-      jitCompilation: false,
       include: [pathResolve("../locales/**")]
+    }),
+    /**
+     * 在页面上按住组合键时，鼠标在页面移动即会在 DOM 上出现遮罩层并显示相关信息，点击一下将自动打开 IDE 并将光标定位到元素对应的代码位置
+     * Mac 默认组合键 Option + Shift
+     * Windows 默认组合键 Alt + Shift
+     * 更多用法看 https://inspector.fe-dev.cn/guide/start.html
+     */
+    codeInspectorPlugin({
+      bundler: "vite",
+      hideConsole: true
     }),
     viteBuildInfo(),
     /**
@@ -41,16 +57,14 @@ export function getPluginsList(
       infixName: false,
       enableProd: true
     }),
-    // 自定义主题
-    themePreprocessorPlugin({
-      scss: {
-        multipleScopeVars: genScssMultipleScopeVars(),
-        extract: true
-      }
-    }),
     // svg组件化支持
     svgLoader(),
-    VITE_CDN ? cdn : null,
+    // 自动按需加载图标
+    Icons({
+      compiler: "vue3",
+      scale: 1
+    }),
+    VITE_CDN ? (await import("./cdn.ts")).cdn : null,
     configCompressPlugin(VITE_COMPRESSION),
     // 线上环境删除console
     removeConsole({ external: ["src/assets/iconfont/iconfont.js"] }),
